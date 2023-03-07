@@ -1,23 +1,10 @@
+{{-- relationships (switchboard; supports both single and multiple: 1-1, 1-n, n-n) --}}
 @php
-    $column['value'] = $column['value'] ?? data_get($entry, $column['name']);
-    $column['escaped'] = $column['escaped'] ?? true;
-    $column['text'] = $column['default'] ?? '-';
-
-    if ($column['value'] instanceof \Closure) {
-        $column['value'] = $column['value']($entry);
-    }
-
-    if (!empty($column['value'])) {
-        $column['text'] = isset($column['value']->name) ? $column['value']->name : $column['value']->pluck('name')->implode(', ');
-    }
+   $allows_multiple = $crud->guessIfFieldHasMultipleFromRelationType($column['relation_type']);
 @endphp
 
-<span>
-    @includeWhen(!empty($column['wrapper']), 'crud::columns.inc.wrapper_start')
-    @if ($column['escaped'])
-        {{ $column['text'] }}
-    @else
-        {!! $column['text'] !!}
-    @endif
-    @includeWhen(!empty($column['wrapper']), 'crud::columns.inc.wrapper_end')
-</span>
+@if ($allows_multiple)
+	@include('crud::columns.select_multiple')
+@else
+	@include('crud::columns.select')
+@endif

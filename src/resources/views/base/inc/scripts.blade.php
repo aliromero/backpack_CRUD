@@ -63,7 +63,3 @@
         location.hash = e.target.hash.replace("#tab_", "#");
     });
 </script>
-
-@if(config('app.debug'))
-    @include('crud::inc.ajax_error_frame')
-@endif

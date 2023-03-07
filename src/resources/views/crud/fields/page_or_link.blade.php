@@ -1,12 +1,19 @@
-{{-- PAGE OR LINK field --}}
-{{-- Used in Backpack\MenuCRUD --}}
+<!-- PAGE OR LINK field -->
+<!-- Used in Backpack\MenuCRUD -->
 
 <?php
-    $field['allows_null'] = $field['allows_null'] ?? false;
-    $field['name']['type'] = $field['name']['type'] ?? $field['name'][0] ?? 'type';
-    $field['name']['link'] = $field['name']['link'] ?? $field['name'][1] ?? 'link';
-    $field['options']['internal_link'] = $field['options']['internal_link'] ?? trans('backpack::crud.internal_link');
-    $field['options']['external_link'] = $field['options']['external_link'] ?? trans('backpack::crud.external_link');
+    $field['options'] = [
+        'page_link'     => trans('backpack::crud.page_link'),
+        'internal_link' => trans('backpack::crud.internal_link'),
+        'external_link' => trans('backpack::crud.external_link'),
+    ];
+    $field['allows_null'] = false;
+    $page_model = $field['page_model'];
+    $active_pages = $page_model::all();
+
+    $entry_link = $field['name']['link'] ?? 'link';
+    $entry_type = $field['name']['type'] ?? 'type';
+    $entry_page_id = $field['name']['page_id'] ?? 'page_id';
 ?>
 
 @include('crud::fields.inc.wrapper_start')
@@ -14,68 +21,89 @@
     @include('crud::fields.inc.translatable_icon')
 
     <div class="row" data-init-function="bpFieldInitPageOrLinkElement">
-        {{-- hidden placeholders for content --}}
-        <input type="hidden" value="{{ $entry->{$field['name']['link']} ?? '' }}" name="{{ $field['name']['link'] }}" />
-
         <div class="col-sm-3">
-                {{-- type select --}}
             <select
                 data-identifier="page_or_link_select"
-                name="{!! $field['name']['type'] !!}"
+                name="{!! $entry_type !!}"
                 @include('crud::fields.inc.attributes')
                 >
 
-                @if ($field['allows_null'])
+                @if (isset($field['allows_null']) && $field['allows_null']==true)
                     <option value="">-</option>
                 @endif
 
-                @foreach ($field['options'] as $key => $value)
-                    <option value="{{ $key }}"
-                        @if (isset($entry) && $key === $entry->{$field['name']['type']})
-                            selected
-                        @endif
-                    >{{ $value }}</option>
-                @endforeach
+                    @if (count($field['options']))
+                        @foreach ($field['options'] as $key => $value)
+                            <option value="{{ $key }}"
+                                @if (isset($entry) && $key==$entry->$entry_type)
+                                     selected
+                                @endif
+                            >{{ $value }}</option>
+                        @endforeach
+                    @endif
             </select>
         </div>
         <div class="col-sm-9">
-            {{-- internal link input --}}
-            <div class="page_or_link_value internal_link {{ isset($entry) && $entry->{$field['name']['type']} === 'internal_link' ? '' : '' }}">
-                <input
-                    type="text"
-                    class="form-control"
-                    placeholder="{{ trans('backpack::crud.internal_link_placeholder', ['url', url(config('backpack.base.route_prefix').'/page')]) }}"
-                    for="{{ $field['name']['link'] }}"
-                    required
-
-                    @if (isset($entry) && $entry->{$field['name']['type']} !== 'internal_link')
-                        disabled="disabled"
-                    @endif
-
-                    @if (isset($entry) && $entry->{$field['name']['type']} === 'internal_link' && $entry->{$field['name']['link']})
-                        value="{{ $entry->{$field['name']['link']} }}"
-                    @endif
-                    >
-            </div>
-
-            {{-- external link input --}}
-            <div class="page_or_link_value external_link {{ isset($entry) && $entry->{$field['name']['type']} === 'external_link' ? '' : 'd-none' }}">
+            <!-- external link input -->
+              <div class="page_or_link_value page_or_link_external_link <?php if (! isset($entry) || $entry->$entry_type != 'external_link') {
+    echo 'd-none';
+} ?>">
                 <input
                     type="url"
                     class="form-control"
+                    name="{!! $entry_link !!}"
                     placeholder="{{ trans('backpack::crud.page_link_placeholder') }}"
-                    for="{{ $field['name']['link'] }}"
-                    required
 
-                    @if (isset($entry) && $entry->{$field['name']['type']} !== 'external_link')
+                    @if (!isset($entry) || $entry->$entry_type !='external_link')
                         disabled="disabled"
-                    @endif
+                      @endif
 
-                    @if (isset($entry) && $entry->{$field['name']['type']} === 'external_link' && $entry->{$field['name']['link']})
-                        value="{{ $entry->{$field['name']['link']} }}"
+                    @if (isset($entry) && $entry->$entry_type =='external_link' && isset($entry->$entry_link) && $entry->$entry_link!='')
+                        value="{{ $entry->$entry_link }}"
                     @endif
                     >
-            </div>
+              </div>
+              <!-- internal link input -->
+              <div class="page_or_link_value page_or_link_internal_link <?php if (! isset($entry) || $entry->$entry_type != 'internal_link') {
+    echo 'd-none';
+} ?>">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="{!! $entry_link !!}"
+                    placeholder="{{ trans('backpack::crud.internal_link_placeholder', ['url', url(config('backpack.base.route_prefix').'/page')]) }}"
+
+                    @if (!isset($entry) || $entry->$entry_type!='internal_link')
+                        disabled="disabled"
+                      @endif
+
+                    @if (isset($entry) && $entry->$entry_type=='internal_link' && isset($entry->$entry_link) && $entry->$entry_link!='')
+                        value="{{ $entry->$entry_link }}"
+                    @endif
+                    >
+              </div>
+              <!-- page slug input -->
+              <div class="page_or_link_value page_or_link_page <?php if (isset($entry) && $entry->$entry_type != 'page_link') {
+    echo 'd-none';
+} ?>">
+                <select
+                    class="form-control"
+                    name="{!! $entry_page_id !!}"
+                    >
+                    @if (!count($active_pages))
+                        <option value="">-</option>
+                    @else
+                        @foreach ($active_pages as $key => $page)
+                            <option value="{{ $page->id }}"
+                                @if (isset($entry) && isset($entry->$entry_page_id) && $page->id==$entry->$entry_page_id)
+                                     selected
+                                @endif
+                            >{{ $page->name }}</option>
+                        @endforeach
+                    @endif
+
+                </select>
+              </div>
         </div>
     </div>
 
@@ -95,35 +123,38 @@
         $crud->markFieldTypeAsLoaded($field);
     @endphp
 
+    {{-- FIELD CSS - will be loaded in the after_styles section --}}
+    @push('crud_fields_styles')
+
+    @endpush
+
     {{-- FIELD JS - will be loaded in the after_scripts section --}}
     @push('crud_fields_scripts')
-    <script>
-        function bpFieldInitPageOrLinkElement(element) {
-            element = element[0]; // jQuery > Vanilla
-            const select = element.querySelector('select[data-identifier=page_or_link_select]');
-            const values = element.querySelectorAll('.page_or_link_value');
-            // updates hidden fields
-            const updateHidden = () => {
-                let selectedInput = select.value && element.querySelector(`.${select.value}`).firstElementChild;
-                element.querySelectorAll(`input[type="hidden"]`).forEach(hidden => {
-                    hidden.value = selectedInput && hidden.getAttribute('name') === selectedInput.getAttribute('for') ? selectedInput.value : '';
+        <script>
+            function bpFieldInitPageOrLinkElement(element) {
+                element.find('[data-identifier=page_or_link_select]').change(function(e) {
+                    $(this).closest('.row').find(".page_or_link_value input").attr('disabled', 'disabled');
+                    $(this).closest('.row').find(".page_or_link_value select").attr('disabled', 'disabled');
+                    $(this).closest('.row').find(".page_or_link_value").removeClass("d-none").addClass("d-none");
+
+                    switch($(this).val()) {
+                        case 'external_link':
+                            $(this).closest('.row').find(".page_or_link_external_link input").removeAttr('disabled');
+                            $(this).closest('.row').find(".page_or_link_external_link").removeClass('d-none');
+                            break;
+
+                        case 'internal_link':
+                            $(this).closest('.row').find(".page_or_link_internal_link input").removeAttr('disabled');
+                            $(this).closest('.row').find(".page_or_link_internal_link").removeClass('d-none');
+                            break;
+
+                        default: // page_link
+                            $(this).closest('.row').find(".page_or_link_page select").removeAttr('disabled');
+                            $(this).closest('.row').find(".page_or_link_page").removeClass('d-none');
+                    }
                 });
             }
-            // save input changes to hidden placeholders
-            values.forEach(value => value.firstElementChild.addEventListener('input', updateHidden));
-            // main select change
-            select.addEventListener('change', () => {
-                values.forEach(value => {
-                    let isSelected = value.classList.contains(select.value);
-                    // toggle visibility and disabled
-                    value.classList.toggle('d-none', !isSelected);
-                    value.firstElementChild.toggleAttribute('disabled', !isSelected);
-                });
-                // updates hidden fields
-                updateHidden();
-            });
-        }
-    </script>
+        </script>
     @endpush
 
 @endif
