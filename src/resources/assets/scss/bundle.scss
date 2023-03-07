@@ -6,15 +6,7 @@
 @import "~animate.css/animate.compat.css";
 @import "node_modules/noty/src/noty";
 
+
 @import "customs/list";
 @import "customs/form";
 @import "customs/crud";
-
-@font-face {
-    font-family: 'iranyekan';
-    src: url('../fonts/yekan/IRANYekanFaNum/eot/iranyekanwebregularfanum.eot');
-    src: url("../fonts/yekan/IRANYekanFaNum/otf/iranyekanwebregularfanum.otf") format("opentype");
-    src: url("../fonts/yekan/IRANYekanFaNum/woff/iranyekanwebregularfanum.woff") format("woff"),
-        url("../fonts/yekan/IRANYekanFaNum/woff2/iranyekanwebregularfanum.woff2") format("woff2");
-
-}
