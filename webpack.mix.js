@@ -35,7 +35,6 @@ mix.sass('src/resources/assets/scss/blue-bundle.scss', 'src/public/packages/back
 
 // copy the Backstrap CSS
 mix.copy('node_modules/@digitallyhappy/backstrap/dist/css', 'src/public/packages/@digitallyhappy/backstrap/css');
-mix.copy('src/assets/fonts/yekan', 'src/public/packages/yekan');
 
 // copy fonts and other assets
 mix.copy('node_modules/line-awesome/dist/line-awesome', 'src/public/packages/line-awesome')

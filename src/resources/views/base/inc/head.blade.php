@@ -27,15 +27,6 @@
     @endif
 
     <style>
-        @font-face {
-            font-family: 'iranyekan';
-            src: url('packages/yekan/IRANYekanFaNum/eot/iranyekanwebregularfanum.eot');
-            src: url("packages/yekan/IRANYekanFaNum/otf/iranyekanwebregularfanum.otf") format("opentype");
-            src: url("packages/yekan/IRANYekanFaNum/woff/iranyekanwebregularfanum.woff") format("woff"),
-                url("packages/yekan/IRANYekanFaNum/woff2/iranyekanwebregularfanum.woff2") format("woff2");
-
-        }
-
         .app {
             font-family: 'iranyekan' !important;
         }
