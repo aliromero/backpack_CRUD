@@ -1,39 +1,45 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    @if (config('backpack.base.meta_robots_content'))<meta name="robots" content="{{ config('backpack.base.meta_robots_content', 'noindex, nofollow') }}"> @endif
+    @if (config('backpack.base.meta_robots_content'))
+        <meta name="robots" content="{{ config('backpack.base.meta_robots_content', 'noindex, nofollow') }}">
+    @endif
 
     <meta name="csrf-token" content="{{ csrf_token() }}" /> {{-- Encrypted CSRF token for Laravel, in order for Ajax requests to work --}}
-    <title>{{ isset($title) ? $title.' :: '.config('backpack.base.project_name') : config('backpack.base.project_name') }}</title>
+    <title>
+        {{ isset($title) ? $title . ' :: ' . config('backpack.base.project_name') : config('backpack.base.project_name') }}
+    </title>
 
     @yield('before_styles')
     @stack('before_styles')
-    
+
     @if (config('backpack.base.styles') && count(config('backpack.base.styles')))
         @foreach (config('backpack.base.styles') as $path)
-        <link rel="stylesheet" type="text/css" href="{{ asset($path).'?v='.config('backpack.base.cachebusting_string') }}">
+            <link rel="stylesheet" type="text/css"
+                href="{{ asset($path) . '?v=' . config('backpack.base.cachebusting_string') }}">
         @endforeach
     @endif
 
     @if (config('backpack.base.mix_styles') && count(config('backpack.base.mix_styles')))
         @foreach (config('backpack.base.mix_styles') as $path => $manifest)
-        <link rel="stylesheet" type="text/css" href="{{ mix($path, $manifest) }}">
+            <link rel="stylesheet" type="text/css" href="{{ mix($path, $manifest) }}">
         @endforeach
     @endif
 
     <style>
         @font-face {
-    font-family: 'iranyekan';
-    src: url('packages/IRANYekanFaNum/eot/iranyekanwebregularfanum.eot');
-    src: url("packages/IRANYekanFaNum/otf/iranyekanwebregularfanum.otf") format("opentype");
-    src: url("packages/IRANYekanFaNum/woff/iranyekanwebregularfanum.woff") format("woff"),
-    url("packages/IRANYekanFaNum/woff2/iranyekanwebregularfanum.woff2") format("woff2");
+            font-family: 'iranyekan';
+            src: url('packages/yekan/IRANYekanFaNum/eot/iranyekanwebregularfanum.eot');
+            src: url("packages/yekan/IRANYekanFaNum/otf/iranyekanwebregularfanum.otf") format("opentype");
+            src: url("packages/yekan/IRANYekanFaNum/woff/iranyekanwebregularfanum.woff") format("woff"),
+                url("packages/yekan/IRANYekanFaNum/woff2/iranyekanwebregularfanum.woff2") format("woff2");
 
-}
-.app {
-    font-family: 'iranyekan' !important;
-}
-</style>
+        }
+
+        .app {
+            font-family: 'iranyekan' !important;
+        }
+    </style>
     @yield('after_styles')
     @stack('after_styles')
 
