@@ -21,6 +21,19 @@
         @endforeach
     @endif
 
+    <style>
+        @font-face {
+    font-family: 'iranyekan';
+    src: url('packages/IRANYekanFaNum/eot/iranyekanwebregularfanum.eot');
+    src: url("packages/IRANYekanFaNum/otf/iranyekanwebregularfanum.otf") format("opentype");
+    src: url("packages/IRANYekanFaNum/woff/iranyekanwebregularfanum.woff") format("woff"),
+    url("packages/IRANYekanFaNum/woff2/iranyekanwebregularfanum.woff2") format("woff2");
+
+}
+.app {
+    font-family: 'iranyekan' !important;
+}
+</style>
     @yield('after_styles')
     @stack('after_styles')
 
