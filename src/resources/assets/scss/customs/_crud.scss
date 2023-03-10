@@ -6,6 +6,14 @@
     }
 }
 
+[dir="rtl"] #crudTable_wrapper #crudTable tr td, #crudTable_wrapper #crudTable tr th, #crudTable_wrapper table.dataTable tr td, #crudTable_wrapper table.dataTable tr th {
+    text-align: right;
+}
+
+[dir="rtl"] .app-header .navbar-brand {
+    direction: ltr;
+}
+
 [dir="rtl"] .sidebar .nav-dropdown-items .nav-dropdown {
     padding: 0 .8rem 0 0;
 }
@@ -15,4 +23,5 @@
 [dir="rtl"] navbar-nav .dropdown-menu{
     left: 0 !important;
 }
+
 
