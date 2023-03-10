@@ -26,11 +26,7 @@
         @endforeach
     @endif
 
-    <style>
-        .app {
-            font-family: 'iranyekan' !important;
-        }
-    </style>
+
     @yield('after_styles')
     @stack('after_styles')
 
