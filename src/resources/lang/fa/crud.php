@@ -37,6 +37,8 @@ return [
     'all'                       => 'همه ',
     'in_the_database'           => 'در پایگاه داده',
     'list'                      => 'لیست',
+    'reset'                     => 'از نو',
+
     'actions'                   => 'اقدامات',
     'preview'                   => 'پیش‌نمایش',
     'delete'                    => 'حذف',
